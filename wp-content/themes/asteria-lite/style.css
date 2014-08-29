@@ -523,23 +523,23 @@ h3#comments_ping{color:#333333; font-size:20px;}
 
 /*FOOTER*/
 #footer{width:100%; background:#1c1c1c; float:left; margin-top:40px; font-size:13px;}
-#footer .center{width: 75%!important; margin: 0px auto;overflow: auto;}
+#footer .center{width: 85%!important; margin: 0px auto;overflow: auto;}
 #footer .widgets .widget a{color:#0f678b!important;display: block;}
 #footer .widgets .widget a:hover{color: #0094f7!important; cursor: pointer;}
 #footer .widgets ul{ margin:0; padding:0;}
-#footer .widgets .widget{ width:26%; float:left; margin:1%; list-style-type:none; margin-bottom:25px;}
+#footer .widgets .widget{ width:21%; float:left; margin:1%; list-style-type:none; margin-bottom:25px;}
 #footer .widgets .widgettitle, #midrow .widgets .widgettitle a{ color:#edeef0; font-size:2em;font-weight: bold}
 #footer .widgets .widget ul{ margin:0; padding:0;}
 #footer .widgets .widget ul li{ list-style-type:none; padding:4px 0;}
-#footer .widgets > ul > li:last-child{ width: 12%;text-align: right;}
-#footer .widgets > ul > li:first-child{margin-left: 5%;width: 21%}
-#footer .widgets .widget ul li a{color:#999; text-decoration:none;}
+#footer .widgets > ul > li:last-child{ width: 10%;text-align: right;}
+#footer .widgets > ul > li:first-child{margin-left: 1%;width: 14%}
+#footer .widgets .widget ul li a{color:#999; text-decoration:none;transition: all 0.3s;-webkit-transition: all 0.3s;}
 
-#footer .textwidget{color: #fff; text-shadow: 0 0 1px #333; margin-top: 28px;}
+#footer .textwidget{color: gray; text-shadow: 0 0 1px #333; margin-top: 28px;padding: 0px 20px 0px 5px;}
 #footer #cntctfrm_contact_form{margin-top: -10px;}
-#footer #cntctfrm_contact_form input{border-radius: 3px; width:90%!important;border: none;height: 32px;padding: 2px 5px;}
+#footer #cntctfrm_contact_form input{border-radius: 3px; width:90%!important;border: none;height: 32px;padding: 2px 5px;background: gray;color: #fff;}
 #footer #cntctfrm_contact_form input[type="submit"]{width: 80px!important;}
-#footer #cntctfrm_contact_form textarea{border-radius: 3px; width:90%!important;border: none;padding: 2px 5px;overflow: auto;}
+#footer #cntctfrm_contact_form textarea{border-radius: 3px; width:90%!important;border: none;padding: 2px 5px;overflow: auto;background: gray;color: #fff;}
 
 
 #footer #wp-calendar #today{ background:#222; color:#ccc;}
@@ -553,7 +553,28 @@ h3#comments_ping{color:#333333; font-size:20px;}
 #footmenu ul{ margin:0; padding:0;}
 #footmenu ul li{ list-style-type:none; display:inline-block; margin-left:20px;}
 #footmenu ul li a{ color:#aaa;}
-
+#footer #cpr{
+    height: 80px;
+    background: rgba(0,0,0,0.9);
+    color:rgba(255,255,255,0.5);
+    line-height: 80px;
+    padding-left: 8%;
+    padding-right: 11%;
+    font-size: 16px;
+    font-weight: bold;
+}
+.footer_linkedin, .footer_facebook{
+    float: right;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    padding: 0px 5px;
+}
+.footer_linkedin:hover, .footer_facebook:hover{
+    text-shadow: 0 0 1px #fff;
+}
+#footer #cpr span a{color: rgba(255,255,255,0.6);}
 
 
 
@@ -738,4 +759,7 @@ color: #333!important;
 }
 #sidebar .menu-item a:hover{
 color: #2dcb73!important;
+}
+.mid_block_content p{
+    color: black!important;
 }
