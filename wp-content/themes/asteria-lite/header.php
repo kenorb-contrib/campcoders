@@ -2,13 +2,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
 <head>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="http://instamenu.campcoders.com/lib/jquery.elastic.source.js"></script>
-<script type="text/javascript">
-	$(window).load(function(){
-		var url = document.location.href + '#cntctfrm_thanks';
-		$('#cntctfrm_contact_form').attr('action',url);
-	})
+
 </script>
 <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=UTF-8" />	
 <title><?php wp_title( '|', true, 'right' ); ?></title>
