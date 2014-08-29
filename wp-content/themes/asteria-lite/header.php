@@ -9,6 +9,7 @@
 		var url = document.location.href + '#cntctfrm_thanks';
 		$('#cntctfrm_contact_form').attr('action',url);
 	})
+</script>
 <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=UTF-8" />	
 <title><?php wp_title( '|', true, 'right' ); ?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1">
