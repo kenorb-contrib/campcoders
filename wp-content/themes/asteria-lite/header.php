@@ -2,7 +2,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
 <head>
-
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>
+	$(window).load(function(){
+	    $('#cntctfrm_contact_form').attr('action','http://theme.campcoders.com/job-search/#cntctfrm_thanks');
+	})
+</script>
 </script>
 <meta http-equiv="Content-Type" content="<?php bloginfo('html_type'); ?>; charset=UTF-8" />	
 <title><?php wp_title( '|', true, 'right' ); ?></title>
