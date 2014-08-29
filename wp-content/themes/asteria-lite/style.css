@@ -114,8 +114,8 @@ body .header4 .bigmenu ul li:hover{ background:none!important;}
 .slider-wrapper{ position:relative; height:550px;}
 
 /*Nivo Slider*/
-#zn_nivo {position:relative; height:550px; width:100%; overflow:hidden;}
-.slide_wrap{width:100%; margin:0 auto; height:550px; overflow:hidden;}
+#zn_nivo {position:relative; height:cals(100%-120px)!important; width:100%; overflow:hidden;}
+.slide_wrap{width:100%; margin:0 auto; height:auto; overflow:hidden;}
 .nivoSlider {position:relative;width:100%;height:auto;overflow: hidden;}
 .nivoSlider img {position:absolute;top:0px;left:0px;max-width: none;}
 .nivo-main-image {display: block !important;position: relative !important; width: 100% !important;height:auto !important;}
@@ -127,7 +127,7 @@ body .header4 .bigmenu ul li:hover{ background:none!important;}
 .nivo-box img { display:block; }
 
 /* Caption styles */
-.nivo-caption {position:absolute;bottom:30px; right:11%;color:#fff;opacity:1;width:412px;z-index:8;text-shadow: 0 0 1px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.5);}
+.nivo-caption {position:absolute;top:30px; right:11%;color:#fff;opacity:1;width:412px;z-index:8;text-shadow: 0 0 1px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.5);}
 .nivo-caption h3{ margin:0px; width:100%; float:left;}
 .nivo-caption h3 a{margin-bottom:5px; display:block; float:left; color:#fff!important;}
 
@@ -137,7 +137,7 @@ body .header4 .bigmenu ul li:hover{ background:none!important;}
 .nivo-caption p:empty, .nivo-caption h2 a:empty{display:none!important;}
 /* Direction nav styles (e.g. Next & Prev) */
 .nivo-directionNav{ opacity:0;}
-.nivo-directionNav a {position:absolute;bottom:46%;z-index:9;cursor:pointer;}
+.nivo-directionNav a {position:absolute;top:240px;z-index:9;cursor:pointer;}
 .nivo-prevNav {left:10px;width:27px; height:53px; display:block; text-indent:-999999px; background:url(images/nivo_nav.png) left no-repeat;}
 .nivo-nextNav {right:10px;width:27px; height:53px; display:block; text-indent:-999999px; background:url(images/nivo_nav.png) right no-repeat;}
 
@@ -522,14 +522,26 @@ h3#comments_ping{color:#333333; font-size:20px;}
 
 
 /*FOOTER*/
-#footer{width:100%; background:#333; float:left; margin-top:40px; font-size:13px;}
-#footer .widgets .widget a{color:#979797;}
+#footer{width:100%; background:#1c1c1c; float:left; margin-top:40px; font-size:13px;}
+#footer .center{width: 75%!important; margin: 0px auto;overflow: auto;}
+#footer .widgets .widget a{color:#0f678b!important;display: block;}
+#footer .widgets .widget a:hover{color: #0094f7!important; cursor: pointer;}
 #footer .widgets ul{ margin:0; padding:0;}
-#footer .widgets .widget{ width:23%; float:left; margin:1%; list-style-type:none; margin-bottom:25px;}
-#footer .widgets .widgettitle, #midrow .widgets .widgettitle a{ color:#edeef0; font-size:1.5em;}
+#footer .widgets .widget{ width:26%; float:left; margin:1%; list-style-type:none; margin-bottom:25px;}
+#footer .widgets .widgettitle, #midrow .widgets .widgettitle a{ color:#edeef0; font-size:2em;font-weight: bold}
 #footer .widgets .widget ul{ margin:0; padding:0;}
 #footer .widgets .widget ul li{ list-style-type:none; padding:4px 0;}
+#footer .widgets > ul > li:last-child{ width: 12%;text-align: right;}
+#footer .widgets > ul > li:first-child{margin-left: 5%;width: 21%}
 #footer .widgets .widget ul li a{color:#999; text-decoration:none;}
+
+#footer .textwidget{color: #fff; text-shadow: 0 0 1px #333; margin-top: 28px;}
+#footer #cntctfrm_contact_form{margin-top: -10px;}
+#footer #cntctfrm_contact_form input{border-radius: 3px; width:90%!important;border: none;height: 32px;padding: 2px 5px;}
+#footer #cntctfrm_contact_form input[type="submit"]{width: 80px!important;}
+#footer #cntctfrm_contact_form textarea{border-radius: 3px; width:90%!important;border: none;padding: 2px 5px;overflow: auto;}
+
+
 #footer #wp-calendar #today{ background:#222; color:#ccc;}
 #footer #wp-calendar caption {border-bottom-style:dashed; border-bottom-color:#1c1c1c;border-width:1px}
 
@@ -718,4 +730,3 @@ body .lay6 .hentry{ width:100%!important; }
 .wpcf7-text{padding: 12px;border: none;background: rgba(0, 0, 0, 0.03);width: 60%; border:1px solid; border-color:rgba(0, 0, 0, 0.05);}
 .wpcf7-textarea{padding: 2%;border: none;background: rgba(0, 0, 0, 0.03);width: 96%;min-height: 200px;border:1px solid; border-color:rgba(0, 0, 0, 0.05);}
 .wpcf7-submit{ float:right; padding:10px 35px; background:#2dcb73; color:#fff; border:none; font-size:18px; cursor:pointer;}
-

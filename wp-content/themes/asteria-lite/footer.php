@@ -5,7 +5,6 @@
 <?php } ?>
 <!--To Top Button END-->
 
-
 <!--Footer Start-->
 <div class="fixed_site">
 	<div class="fixed_wrap footefixed">

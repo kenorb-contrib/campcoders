@@ -25,7 +25,8 @@ Template Name: Blog Page Template
 
 	 $args = array(
 				   'post_type' => 'post',
-				   'cat' => ''.$asteria['blog_cat_id'].'',
+				   //'cat' => ''.$asteria['blog_cat_id'].'', get all cat
+				   'cat' => '11', //get post in blog 
 				   'paged' => ( get_query_var('paged') ? get_query_var('paged') : 1),
 				   'posts_per_page' => '6');
 	$the_query = new WP_Query( $args );

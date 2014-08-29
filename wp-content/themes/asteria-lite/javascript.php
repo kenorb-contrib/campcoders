@@ -1,8 +1,8 @@
 <?php global $asteria;?>
 <?php if(($asteria['slider_type_id'] == "nivo") || !get_option( 'asteria' ) ){ ?>
+
 <script type="text/javascript">
     jQuery(window).ready(function() {
-
 		// nivoslider init
 		jQuery('#zn_nivo').nivoSlider({
 				effect: 'random',
@@ -264,7 +264,6 @@ jQuery('.ast_pagenav a').each(function(){
 	});
 
     });
-
 });  // end ready function
 <?php } ?>
 </script> 
