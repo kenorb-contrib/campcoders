@@ -472,6 +472,7 @@ h3#comments_ping{color:#333333; font-size:20px;}
 
 .widget_corner{width: 0px;height: 0px;border-style: solid;border-width: 0 0 50px 50px;border-color: transparent transparent #fff transparent; position:absolute; bottom:0; right:0;}
 
+#sidebar a:hover{text-decoration: none}
 /*WIDGETS*/
 #searchform .screen-reader-text{ display:none;}
 #sidebar #searchform div{ position:relative;border: 1px solid rgba(0, 0, 0, 0.1);}
