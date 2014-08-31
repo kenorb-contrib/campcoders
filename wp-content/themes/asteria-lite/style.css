@@ -624,7 +624,7 @@ p.capcap {position: absolute;bottom: 0px;background: rgba(0, 0, 0, 0.8);color: #
 @media screen and (max-width: 1200px){
 body .header5 .center{width:100%!important;}
 body .center{ width:95%!important; margin: 0 auto;}
-body #content .center{ width:100%; margin: 0 auto;}
+body #content .center{width:100%; margin: 0 auto;}
 
 .ast_row{ min-height:250px;}
 }
