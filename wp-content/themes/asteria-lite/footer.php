@@ -19,7 +19,7 @@
     </div>
     <div id="cpr">
         <div id="copyright-content">
-            <span class="cpr-title">Campcoders</span>
+            <span class="cpr-title">&#169; 2014 Campcoders</span>
             <span class="footer_linkedin"><a href="#facebook"><i class="fa fa-linkedin"></i></a></span>
             <span class="footer_facebook"><a href="#linkedin"><i class="fa fa-facebook"></i></a></span>
             

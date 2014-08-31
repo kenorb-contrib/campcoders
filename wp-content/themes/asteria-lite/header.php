@@ -11,8 +11,11 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="wp-content/themes/asteria-lite/js/jquery.nicescroll.min.js"></script>
 <script>
 	$(window).load(function(){
+
+
 	    $('#cntctfrm_contact_form').attr('action','http://theme.campcoders.com/job-search/#cntctfrm_thanks');
 	    $('.slider-wrapper').css('height',$(window).height()-85);
 	    var current_cate  = <?php echo json_encode(get_the_category()[0]->slug); ?>;

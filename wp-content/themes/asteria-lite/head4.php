@@ -5,9 +5,9 @@
     <div class="logo">
 
 			<?php if ( is_home() ) { ?>   
-            <h1><a style="font-family: kaffeesatzthin, arial, hevertical!important" href="<?php echo esc_url( home_url( '/' ) );?>"><?php bloginfo('name'); ?></a></h1>
+            <h1><a  href="<?php echo esc_url( home_url( '/' ) );?>"><?php bloginfo('name'); ?></a></h1>
             <?php }else{ ?>
-            <h2><a style="font-family: kaffeesatzthin, arial, hevertical!important" href="<?php echo esc_url( home_url( '/' ) );?>"><?php bloginfo('name'); ?></a></h2>
+            <h2><a href="<?php echo esc_url( home_url( '/' ) );?>"><?php bloginfo('name'); ?></a></h2>
             <?php } ?>
 
     </div>
