@@ -19,7 +19,7 @@
     </div>
     <div id="cpr">
         <div id="copyright-content">
-            <span class="cpr-title">&#169; 2014 Campcoders</span>
+            <span class="cpr-title">&#169; 2014 Campcoders - <span class="add" style="font-size: 10px;">4th Fl., 16/26 Nguyen Hong, Nam TC, Dong Da Dist, Hanoi, Vietnam. Tel: + 84 168 68 20 744 </span></span>
             <span class="footer_linkedin"><a href="#facebook"><i class="fa fa-linkedin"></i></a></span>
             <span class="footer_facebook"><a href="#linkedin"><i class="fa fa-facebook"></i></a></span>
             

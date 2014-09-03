@@ -540,9 +540,9 @@ h3#comments_ping{color:#333333; font-size:20px;}
 #footer .textwidget{color: rgba(255,255,255,0.3)!important; text-shadow: 0 0 1px #333; margin-top: 16px;padding: 0px 20px 0px 5px;}
 #footer #cntctfrm_contact_form{margin-top: -10px;}
 #footer #cntctfrm_contact_form input{border-radius: 3px; width:90%!important;border: none;height: 32px;padding: 2px 5px;background: gray;color: #fff;}
-#footer #cntctfrm_contact_form input[type="submit"]{width: 80px!important;}
+#footer #cntctfrm_contact_form input[type="submit"]{width: 80px!important;color: rgba(255,255,255,0.4);cursor: pointer;}
 #footer #cntctfrm_contact_form textarea{border-radius: 3px; width:90%!important;border: none;padding: 2px 5px;overflow: auto;background: gray;color: #fff;}
-
+#footer #cntctfrm_contact_form label{font-weight: normal!important;}
 
 #footer #wp-calendar #today{ background:#222; color:#ccc;}
 #footer #wp-calendar caption {border-bottom-style:dashed; border-bottom-color:#1c1c1c;border-width:1px}
