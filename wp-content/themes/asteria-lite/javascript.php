@@ -118,7 +118,7 @@ jQuery(window).ready(function() {jQuery("#countdown_mntnc").countdown({
 <?php if (!empty ($asteria['ajax_id'])) { ?>
 //AJAX PAGINATION
 jQuery(document).ready(function(){
-
+/*
 jQuery('.ast_pagenav span').replaceWith(function() {
 		var pathname = window.location.pathname;
     var url = (jQuery(this).text());
@@ -129,7 +129,7 @@ jQuery('.ast_pagenav span').replaceWith(function() {
 		    return '<a class="page-numbers current" href="<?php echo $current_url ?>" target="_blank">' + url + '</a>'; 
 	 }
 });
-
+*/
 jQuery('.ast_pagenav span.page-numbers').each(function () {
 	var pathname = window.location.pathname;
 	
