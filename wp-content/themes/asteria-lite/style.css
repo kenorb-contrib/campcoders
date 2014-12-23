@@ -482,7 +482,10 @@ h3#comments_ping{color:#333333; font-size:20px;}
 #sidebar #searchsubmit, #footer #searchsubmit{position: absolute;}
 #searchform{ position:relative;}
 
-#sidebar li a{color:rgb(136,136,136);}
+#sidebar li a{
+    color:#333!important;
+    cursor: pointer;
+}
 
 #sidebar li a:hover{color:rgb(45, 203, 115)!important;}
 .widget_search{ padding-bottom:0px!important;}
