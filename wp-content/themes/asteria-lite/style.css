@@ -483,7 +483,7 @@ h3#comments_ping{color:#333333; font-size:20px;}
 #searchform{ position:relative;}
 
 #sidebar li a{
-    color:#333!important;
+    color:#000!important;
     cursor: pointer;
 }
 
