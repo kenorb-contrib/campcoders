@@ -230,7 +230,7 @@ body .header4 .bigmenu ul li:hover{ background:none!important;}
 
 .lay1 .post_image{width: 100%;position: relative; overflow:hidden;-webkit-transition:all 0.2s ease-out;-moz-transition:all 0.2s ease-out;-ms-transition:all 0.2s ease-out;-o-transition:all 0.2s ease-out;transition:all 0.2s ease-out; max-height:260px;}
 .lay1 .post_content{position: absolute;width: 100%;-webkit-transition:all 0.2s ease-out;-moz-transition:all 0.2s ease-out;-ms-transition:all 0.2s ease-out;-o-transition:all 0.2s ease-out;transition:all 0.2s ease-out;bottom:-130px; z-index:3;}
-#content: {
+#content{
     font-family: "Proxima Nova"!important;
     text-shadow: none!important;
 }
