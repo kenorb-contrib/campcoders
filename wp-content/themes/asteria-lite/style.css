@@ -787,7 +787,10 @@ a{text-decoration: none!important}
 
 
 
-#content, .post_content, .postitle{
+#content, .post_content, .postitle,.mid_block_content > *{
     font-family: "Proxima Nova"!important;
     text-shadow: none!important;
+}
+.postitle{
+    font-weight: normal;
 }
