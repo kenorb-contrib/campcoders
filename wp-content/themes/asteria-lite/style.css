@@ -787,7 +787,7 @@ a{text-decoration: none!important}
 
 
 
-#content, .post_content, .postitle,.mid_block_content > *{
+#content, .post_content, .postitle,.mid_block_content > *,.widgettitle, .widget_wrap > *{
     font-family: "Proxima Nova"!important;
     text-shadow: none!important;
 }
