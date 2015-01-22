@@ -8,10 +8,14 @@ class MetaImageSlide extends MetaSlide {
      * Register slide type
      */
     public function __construct() {
+
+        parent::__construct();
+        
         add_filter( 'metaslider_get_image_slide', array( $this, 'get_slide' ), 10, 2 );
         add_action( 'metaslider_save_image_slide', array( $this, 'save_slide' ), 5, 3 );
         add_action( 'wp_ajax_create_image_slide', array( $this, 'ajax_create_slide' ) );
         add_action( 'wp_ajax_resize_image_slide', array( $this, 'ajax_resize_slide' ) );
+
     }
 
     /**
@@ -111,6 +115,7 @@ class MetaImageSlide extends MetaSlide {
                     <td class='col-1'>
                         <div class='thumb' style='background-image: url({$thumb})'>
                             " . $this->get_delete_button_html() . "
+                            " . $this->get_change_image_button_html() . "
                             <span class='slide-details'>{$slide_label}</span>
                         </div>
                     </td>
@@ -137,11 +142,6 @@ class MetaImageSlide extends MetaSlide {
         $title = esc_attr( get_post_meta( $slide_id, 'ml-slider_title', true ) );
         $target = get_post_meta( $slide_id, 'ml-slider_new_window', true ) ? 'checked=checked' : '';
         $caption = esc_textarea( $this->slide->post_excerpt );
-        $crop_position = get_post_meta( $slide_id, 'ml-slider_crop_position', true);
-
-        if ( ! $crop_position ) {
-            $crop_position = 'center-center';
-        }
 
         $general_tab = "<textarea name='attachment[{$slide_id}][post_excerpt]' placeholder='" . __( "Caption", "metaslider" ) . "'>{$caption}</textarea>
                         <input class='url' type='text' name='attachment[{$slide_id}][url]' placeholder='" . __( "URL", "metaslider" ) . "' value='{$url}' />
@@ -160,21 +160,6 @@ class MetaImageSlide extends MetaSlide {
                     <div class='row'><label>" . __( "Image Alt Text", "metaslider" ) . "</label></div>
                     <div class='row'><input type='text' size='50' name='attachment[{$slide_id}][alt]' value='{$alt}' /></div>";
 
-        $crop_tab = "<div class='row'><label>" . __( "Crop Position", "metaslider" ) . "</label></div>
-                    <div class='row'>
-                        <select class='crop_position' name='attachment[{$slide_id}][crop_position]'>
-                            <option value='left-top' " . selected( $crop_position, 'left-top', false ) . ">" . __( "Top Left", "metaslider" ) . "</option>
-                            <option value='center-top' " . selected( $crop_position, 'center-top', false ) . ">" . __( "Top Center", "metaslider" ) . "</option>
-                            <option value='right-top' " . selected( $crop_position, 'right-top', false ) . ">" . __( "Top Right", "metaslider" ) . "</option>
-                            <option value='left-center' " . selected( $crop_position, 'left-center', false ) . ">" . __( "Center Left", "metaslider" ) . "</option>
-                            <option value='center-center' " . selected( $crop_position, 'center-center', false ) . ">" . __( "Center Center", "metaslider" ) . "</option>
-                            <option value='right-center' " . selected( $crop_position, 'right-center', false ) . ">" . __( "Center Right", "metaslider" ) . "</option>
-                            <option value='left-bottom' " . selected( $crop_position, 'left-bottom', false ) . ">" . __( "Bottom Left", "metaslider" ) . "</option>
-                            <option value='center-bottom' " . selected( $crop_position, 'center-bottom', false ) . ">" . __( "Bottom Center", "metaslider" ) . "</option>
-                            <option value='right-bottom' " . selected( $crop_position, 'right-bottom', false ) . ">" . __( "Bottom Right", "metaslider" ) . "</option>
-                        </select>
-                    </div>";
-
         $tabs = array(
             'general' => array(
                 'title' => __( "General", "metaslider" ),
@@ -187,6 +172,27 @@ class MetaImageSlide extends MetaSlide {
         );
 
         if ( version_compare( get_bloginfo('version'), 3.9, '>=' ) ) {
+
+            $crop_position = get_post_meta( $slide_id, 'ml-slider_crop_position', true);
+
+            if ( ! $crop_position ) {
+                $crop_position = 'center-center';
+            }
+        
+            $crop_tab = "<div class='row'><label>" . __( "Crop Position", "metaslider" ) . "</label></div>
+                        <div class='row'>
+                            <select class='crop_position' name='attachment[{$slide_id}][crop_position]'>
+                                <option value='left-top' " . selected( $crop_position, 'left-top', false ) . ">" . __( "Top Left", "metaslider" ) . "</option>
+                                <option value='center-top' " . selected( $crop_position, 'center-top', false ) . ">" . __( "Top Center", "metaslider" ) . "</option>
+                                <option value='right-top' " . selected( $crop_position, 'right-top', false ) . ">" . __( "Top Right", "metaslider" ) . "</option>
+                                <option value='left-center' " . selected( $crop_position, 'left-center', false ) . ">" . __( "Center Left", "metaslider" ) . "</option>
+                                <option value='center-center' " . selected( $crop_position, 'center-center', false ) . ">" . __( "Center Center", "metaslider" ) . "</option>
+                                <option value='right-center' " . selected( $crop_position, 'right-center', false ) . ">" . __( "Center Right", "metaslider" ) . "</option>
+                                <option value='left-bottom' " . selected( $crop_position, 'left-bottom', false ) . ">" . __( "Bottom Left", "metaslider" ) . "</option>
+                                <option value='center-bottom' " . selected( $crop_position, 'center-bottom', false ) . ">" . __( "Bottom Center", "metaslider" ) . "</option>
+                                <option value='right-bottom' " . selected( $crop_position, 'right-bottom', false ) . ">" . __( "Bottom Right", "metaslider" ) . "</option>
+                            </select>
+                        </div>";
 
             $tabs['crop'] = array(
                 'title' => __( "Crop", "metaslider" ),
@@ -353,9 +359,24 @@ class MetaImageSlide extends MetaSlide {
             $html .= '<div class="caption-wrap"><div class="caption">' . $slide['caption'] . '</div></div>';
         }
 
-        $thumb = isset( $slide['data-thumb'] ) && strlen( $slide['data-thumb'] ) ? " data-thumb=\"{$slide['data-thumb']}\"" : "";
+        $attributes = apply_filters( 'metaslider_flex_slider_list_item_attributes', array(
+                'data-thumb' => isset($slide['data-thumb']) ? $slide['data-thumb'] : "",
+                'style' => "display: none; width: 100%;",
+                'class' => "slide-{$this->slide->ID} ms-image"
+            ), $slide, $this->slider->ID );
 
-        $html = '<li style="display: none; width: 100%;"' . $thumb . '>' . $html . '</li>';
+        $li = "<li";
+
+        foreach ( $attributes as $att => $val ) {
+            if ( strlen( $val ) ) {
+                $li .= " " . $att . '="' . esc_attr( $val ) . '"';
+            }
+        }
+
+        $li .= ">" . $html . "</li>";
+
+        $html = $li;
+
 
         return apply_filters( 'metaslider_image_flex_slider_markup', $html, $slide, $this->settings );
 

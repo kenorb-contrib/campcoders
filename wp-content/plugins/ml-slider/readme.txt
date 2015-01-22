@@ -3,8 +3,8 @@ Contributors: matchalabs
 Tags: wordpress slideshow,seo,slideshow,slider,widget,wordpress slider,image slider,flexslider,flex slider,nivoslider,nivo slider,responsive,responsive slides,coinslider,coin slider,slideshow,carousel,responsive slider,vertical slides
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CQ84KC4X8YKW8
 Requires at least: 3.5
-Tested up to: 3.9
-Stable tag: 2.9.1
+Tested up to: 4.0
+Stable tag: 3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Easy to use WordPress slider plugin. Create SEO optimised responsive slideshows 
 
 == Description ==
 
-http://www.youtube.com/watch?v=I7IfkV6iLqo
+http://www.youtube.com/watch?v=o0f3uAvL6Ic
 
 The most popular WordPress slider plugin. Creating slideshows with [Meta Slider](http://www.metaslider.com/) is fast and easy. Simply select images from your WordPress Media Library, drag and drop them into place, set slide captions, links and SEO fields all from one page. You can choose from 4 different slideshow types (Flex Slider, Nivo Slider, Responsive Slides & Coin Slider) and use the provided shortcode or template include to easily embed slideshows in your blog.
 
@@ -32,6 +32,7 @@ The most popular WordPress slider plugin. Creating slideshows with [Meta Slider]
 * Drag and drop slide reordering
 * Admin preview
 * Intelligent image cropping
+* Set image crop position
 * Built in Widget and Shortcode
 * Loads of slideshow configuration options - transition effect, speed etc (per slideshow)
 * Fully localised
@@ -39,7 +40,8 @@ The most popular WordPress slider plugin. Creating slideshows with [Meta Slider]
 * Compatible with translation plugins (WPML, PolyLang & qTranslate)
 * Extensive Developer API (hooks & filters)
 * Fast - only the minimum JavaScript/CSS is included on your page
-* Free, active, basic support (covering installation issues and theme/plugin conflicts)
+* Free basic support (covering installation issues and theme/plugin conflicts)
+* Lightbox support with the [Meta Slider Lightbox](http://wordpress.org/plugins/ml-slider-lightbox/) addon
 
 Upgrade to [Meta Slider Pro](http://www.metaslider.com/upgrade) to add support for:
 
@@ -69,12 +71,14 @@ Upgrade to [Meta Slider Pro](http://www.metaslider.com/upgrade) to add support f
 
 Read more and thanks to:
 
-* [http://flexslider.woothemes.com/](http://flexslider.woothemes.com/)
-* [http://responsive-slides.viljamis.com/](http://responsive-slides.viljamis.com/)
-* [http://workshop.rs/projects/coin-slider/](http://workshop.rs/projects/coin-slider/)
-* [http://dev7studios.com/nivo-slider/](http://dev7studios.com/nivo-slider/)
+* [Flex Slider](http://flexslider.woothemes.com/)
+* [Responsive Slides](http://responsive-slides.viljamis.com/)
+* [Coin Slider](http://workshop.rs/projects/coin-slider/)
+* [Nivo Slider](http://dev7studios.com/nivo-slider/)
 
 Find out more at http://www.metaslider.com
+
+Follow us on Twitter: [@wpmetaslider](https://twitter.com/wpmetaslider)
 
 == Installation ==
 
@@ -139,6 +143,36 @@ See www.metaslider.com/documentation/image-cropping/
 6. Administration panel - selecting slides
 
 == Changelog ==
+
+= 3.2.1 [16/12/14] =
+
+* Change: Change slide image functionality backed out
+* Fix: Apply FireFox mobile fix to Flex Slider (github #1110)
+
+= 3.2 [26/11/14] =
+
+* New feature: Change slide image (click top right of slide thumbnail)
+* Update: German language files (thanks to Ov3rfly!)
+
+= 3.1.1 [21/10/14] =
+
+* Fix: restrict_to shortcode parameter
+* Change: Add metaslider_flex_slider_list_item_attributes filter
+
+= 3.1 [14/10/14] =
+
+* New feature: Ajax delete slide (to stop users from losing changes when deleting a slide)
+* New feature: restrict_to shortcode parameter now accepts page IDs
+* Update: Change icon
+* Fix: Minor admin styling fix
+* Fix: Hide share buttons for pro users
+* Change: Remove upgrade nags from media library, add Go Pro page (with an option to hide the page)
+
+= 3.0.1 [19/08/14] =
+
+* Fix: Escape admin setting text fields
+* Fix: Escape admin tab names (thanks to Dylan Irzi for spotting and reporting this!)
+* Change: Allow shortcode parameters to be filtered
 
 = 3.0 [30/07/14] =
 

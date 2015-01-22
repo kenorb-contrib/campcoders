@@ -3,7 +3,7 @@
 /*
 Plugin Name: Recent Posts by Category Widget
 Description: Just like the default Recent Posts widget except you can choose a category to pull posts from.
-Version: 1.0
+Version: 1.1
 Author: Ross Cornell
 Author URI: http://www.rosscornell.com
 License: GPL
@@ -111,7 +111,7 @@ class rpjc_widget_cat_recent_posts extends WP_Widget {
 
 		echo $before_widget;
 
-		$title     = apply_filters( 'widget_title', $instance['title'] );
+		$title     = $title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 		$category  = $instance['category'];
 		$number    = $instance['number'];
 		$show_date = ( $instance['show_date'] === 1 ) ? true : false;

