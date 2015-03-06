@@ -794,3 +794,12 @@ a{text-decoration: none!important}
 .postitle{
     font-weight: normal;
 }
+.wpcf7-form input[type="text"],.wpcf7-form input[type="email"], .wpcf7-form textarea{
+    width: 100%;
+    background: #eee;
+    padding: 2px 10px;
+    color: #333;
+}
+.wpcf7-form textarea{
+    height: 100px!important;
+}
