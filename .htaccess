@@ -13,5 +13,5 @@ RewriteRule . /index.php [L]
 # END WordPress
 AuthName "Protected"
 AuthType Basic
-AuthUserFile /var/www/html/campcoders_website/.htpasswd
+AuthUserFile /var/www/html/campcoders/.htpasswd
 require valid-user
