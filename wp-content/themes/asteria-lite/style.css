@@ -143,8 +143,8 @@ body .header4 .bigmenu ul li:hover{ background:none!important;}
 /* Direction nav styles (e.g. Next & Prev) */
 .nivo-directionNav{ opacity:0;}
 .nivo-directionNav a {position:absolute;top:240px;z-index:9;cursor:pointer;}
-.nivo-prevNav {left:10px;width:27px; height:53px; display:block; text-indent:-999999px; background:url(images/nivo_nav.png) left no-repeat;}
-.nivo-nextNav {right:10px;width:27px; height:53px; display:block; text-indent:-999999px; background:url(images/nivo_nav.png) right no-repeat;}
+.nivo-prevNav {left:10px;width:27px; height:53px; display:block; text-indent:-999999px; background:url(images/nivo_nav.png) left no-repeat;background-position: 5px 0px;}
+.nivo-nextNav {right:10px;width:27px; height:53px; display:block; text-indent:-999999px; background:url(images/nivo_nav.png) right no-repeat; background-position: -66px -60px;}
 
 .nivo-caption .sld_layout1 h3{ line-height:24px!important;}
 .nivo-caption .sld_layout1 h3 a{ font-size:24px!important; background:#2dcb73;padding:3%; width:94%;}
