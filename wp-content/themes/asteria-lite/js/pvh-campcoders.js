@@ -63,8 +63,7 @@
 		    $('#'+id).find('ul').collapse('toggle');
 		}
 		$('.page-numbers').click(function(){
-			document.location.href = $(this).attr(href);
-			return false;
+			document.location.href = $(this).attr('href');
 		})
 	})
 
