@@ -8,7 +8,7 @@
 	    })
 	    $('#cntctfrm_contact_form').attr('action','http://campcoders.com/#cpr');
 	    $('.slider-wrapper').css('height',$(window).height()-85);
-	    var current_cate  = <?php echo json_encode(get_the_category()[0]->slug); ?>;
+	   
 	    console.log(current_cate);
 	    if(current_cate == 'portfolio'){
 	    	gtTop('rpjc_widget_cat_recent_posts-4');
