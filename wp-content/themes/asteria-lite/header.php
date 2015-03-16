@@ -12,6 +12,9 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="wp-content/themes/asteria-lite/js/jquery.nicescroll.min.js"></script>
+<script>
+ var current_cate  = <?php echo json_encode(get_the_category()[0]->slug); ?>;
+</script>
 <script type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/pvh-campcoders.js"></script>
 
 </script>
