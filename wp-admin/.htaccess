@@ -1,5 +1,5 @@
 # END WordPress
 AuthName "Protected"
 AuthType Basic
-AuthUserFile /var/www/html/campcoders/.htpasswd
+AuthUserFile /var/www/html/WP/campcoders/.htpasswd
 require valid-user

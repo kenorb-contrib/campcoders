@@ -90,9 +90,9 @@ class CCF_Form_Manager {
 
 		<script type="text/html" id="ccf-field-row-template">
 			<h4>
-				<div class="right">
+				<span class="right">
 					<a aria-hidden="true" data-icon="&#xe602;" class="delete"></a>
-				</div>
+				</span>
 				<span class="label">{{ label }}</span>
 			</h4>
 
@@ -124,10 +124,7 @@ class CCF_Form_Manager {
 				<div class="accordion-section ccf-form-notifications"></div>
 			</div>
 
-			<div class="form-content">
-				<!--<div class="no-fields">
-					<?php esc_html_e( '&rarr; Drag fields here to add them', 'custom-contact-forms' ); ?>
-				</div>-->
+			<div class="form-content" data-drag-message="<?php esc_html_e( '&larr; Drag fields from the left here.', 'custom-contact-forms' ); ?>">
 			</div>
 
 			<div class="right-sidebar ccf-field-sidebar accordion-container"></div>
@@ -172,6 +169,18 @@ class CCF_Form_Manager {
 				<p class="completion-message">
 					<label for="ccf_form_completion_message"><?php esc_html_e( 'Completion Message:', 'custom-contact-forms' ); ?></label>
 					<textarea class="widefat form-completion-message" id="ccf_form_completion_message" name="completion-message">{{ form.completionMessage }}</textarea>
+				</p>
+				<p>
+					<label for="ccf_form_pause"><?php esc_html_e( 'Pause form:', 'custom-contact-forms' ); ?></label>
+
+					<select name="form_pause" class="form-pause" id="ccf_form_pause">
+						<option value="0"><?php esc_html_e( 'No', 'custom-contact-forms' ); ?></option>
+						<option value="1" <# if ( form.pause ) { #>selected<# } #>><?php esc_html_e( 'Yes', 'custom-contact-forms' ); ?></option>
+					</select>
+				</p>
+				<p class="pause-message">
+					<label for="ccf_form_pause_message"><?php esc_html_e( 'Pause Message:', 'custom-contact-forms' ); ?></label>
+					<textarea class="widefat form-pause-message" id="ccf_form_pause_message" name="pause-message">{{ form.pauseMessage }}</textarea>
 				</p>
 			</div>
 		</script>
@@ -719,7 +728,7 @@ class CCF_Form_Manager {
 						<label for="ccf-field-address-type"><?php esc_html_e( 'Type:', 'custom-contact-forms' ); ?></label>
 						<select id="ccf-field-address-type" class="field-address-type">
 							<option value="us"><?php esc_html_e( 'United States', 'custom-contact-forms' ); ?></option>
-							<option value="international" <# if ( 'international' === field.format ) { #>selected="selected"<# } #>><?php esc_html_e( 'International', 'custom-contact-forms' ); ?></option>
+							<option value="international" <# if ( 'international' === field.addressType ) { #>selected="selected"<# } #>><?php esc_html_e( 'International', 'custom-contact-forms' ); ?></option>
 						</select>
 					</div>
 					<div>
@@ -1497,6 +1506,7 @@ class CCF_Form_Manager {
 			wp_enqueue_script( 'ccf-form-manager', plugins_url( $js_manager_path, dirname( __FILE__ ) ), array( 'json2', 'jquery', 'jquery-ui-core', 'jquery-ui-datepicker', 'underscore', 'backbone', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-sortable', 'jquery-ui-droppable', 'wp-api', 'moment' ), '1.0', true );
 			wp_localize_script( 'ccf-form-manager', 'ccfSettings', array(
 				'nonce' => wp_create_nonce( 'ccf_nonce' ),
+				'downloadSubmissionsNonce' => wp_create_nonce( 'ccf_download_submissions_nonce' ),
 				'adminUrl' => esc_url_raw( admin_url() ),
 				'fieldLabels' => $field_labels,
 				'gmtOffset' => get_option( 'gmt_offset' ),
@@ -1511,6 +1521,7 @@ class CCF_Form_Manager {
 				'invalidDate' => esc_html__( 'Invalid date', 'custom-contact-forms' ),
 				'allLabels' => array_merge( $field_labels, $structure_field_labels, $special_field_labels ),
 				'thickboxTitle' => esc_html__( 'Form Submission', 'custom-contact-forms' ),
+				'pauseMessage' => esc_html__( 'This form is paused right now. Check back later!', 'custom-contact-forms' ),
 				'skipFields' => apply_filters( 'ccf_no_submission_display_fields', array( 'html', 'section-header', 'recaptcha' ) ),
 			) );
 

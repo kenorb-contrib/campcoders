@@ -778,6 +778,7 @@
 				'blur input': 'save',
 				'change select': 'save',
 				'change select.form-completion-action-type': 'toggleCompletionFields',
+				'change select.form-pause': 'togglePauseFields',
 				'change select.form-send-email-notifications': 'toggleNotificationFields'
 			},
 
@@ -805,6 +806,18 @@
 				}
 			},
 
+			togglePauseFields: function() {
+
+				var pause = this.el.querySelectorAll( '.form-pause' )[0].value;
+				var pauseMessage = this.el.querySelectorAll( '.pause-message' )[0];
+
+				if ( parseInt( pause ) ) {
+					pauseMessage.style.display = 'block';
+				} else {
+					pauseMessage.style.display = 'none';
+				}
+			},
+
 			save: function( $promise ) {
 				var SELF = this;
 
@@ -821,6 +834,12 @@
 
 				var buttonText = this.el.querySelectorAll( '.form-button-text' )[0].value;
 				this.model.set( 'buttonText', buttonText );
+
+				var pause = this.el.querySelectorAll( '.form-pause' )[0].value;
+				this.model.set( 'pause', ( parseInt( pause ) ) ? true : false );
+
+				var pauseMessage = this.el.querySelectorAll( '.form-pause-message' )[0].value;
+				this.model.set( 'pauseMessage', pauseMessage );
 
 				var completionMessage = this.el.querySelectorAll( '.form-completion-message' )[0].value;
 				this.model.set( 'completionMessage', completionMessage );
@@ -844,6 +863,8 @@
 				this.el.innerHTML = this.template( context );
 
 				this.toggleCompletionFields();
+
+				this.togglePauseFields();
 
 				wp.ccf.dispatcher.on( 'saveFormSettings', this.save, this );
 				wp.ccf.dispatcher.on( 'mainViewChange', this.save, this );
@@ -1190,25 +1211,26 @@
 					specialFields.appendChild( new wp.ccf.views.FieldRowPlaceholder( { type: type } ).render().el );
 				});
 
+				var fieldModels = SELF.model.get( 'fields' );
+				var formContent = SELF.el.querySelectorAll( '.form-content' )[0];
+				var $formContent = $( formContent );
+
 				$( SELF.el.querySelectorAll( '.left-sidebar' )[0].querySelectorAll( '.field' ) ).draggable( {
 					cursor: 'move',
+					distance: 2,
 					zIndex: 160001,
-					//opacity: 0.75,
 					scroll: false,
-					containment: '.ccf-form-pane',
+					containment: 'document',
 					appendTo: '.ccf-main-modal',
-					snap: true,
+					snap: false,
 					connectToSortable: '.form-content',
 					helper: function( event ) {
 						var $field = $( event.currentTarget );
 						var $helper = $( '<div class="field" data-field-type="' + $field.attr( 'data-field-type' ) + '"><h4>' + $field.find( '.label' ).html() + '</h4></div>' );
-						return $helper.css( { 'width': $field.width(), 'height': $field.height() } );
+						return $helper.css( { 'width': $formContent.width(), opacity: '.75', 'height': $field.height() } );
 					}
 
 				});
-
-				var fieldModels = SELF.model.get( 'fields' );
-				var formContent = SELF.el.querySelectorAll( '.form-content' )[0];
 
 				if ( fieldModels.length >= 1 ) {
 					formContent.innerHTML = '';
@@ -1221,7 +1243,9 @@
 
 				$( formContent ).sortable( {
 					axis: 'y',
+					distance: 2,
 					handle: 'h4',
+					placeholder: 'field-placeholder',
 					stop: function( event, $ui ) {
 						if ( ! $ui.item.hasClass( 'instantiated' ) ) {
 							var type = $ui.item.attr( 'data-field-type' );

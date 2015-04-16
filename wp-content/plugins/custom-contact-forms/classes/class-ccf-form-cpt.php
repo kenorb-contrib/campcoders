@@ -10,6 +10,14 @@ class CCF_Form_CPT {
 	public function __construct() {}
 
 	/**
+	 * Keep track of post types when we change them
+	 *
+	 * @var $old_post_types
+	 * @since 6.5
+	 */
+	public $old_post_types = false;
+
+	/**
 	 * Setup form screen with actions and filters
 	 *
 	 * @since 6.0
@@ -25,6 +33,193 @@ class CCF_Form_CPT {
 		add_filter( 'get_the_excerpt', array( $this, 'filter_get_the_excerpt' ) );
 		add_filter( 'screen_settings', array( $this, 'filter_screen_options' ), 10, 2 );
 		add_action( 'before_delete_post', array( $this, 'action_before_delete_post' ) );
+		add_filter( 'wp_link_query_args', array( $this, 'filter_wp_link_query_args' ) );
+		add_action( 'admin_init', array( $this, 'action_parse_request' ) );
+	}
+
+	/**
+	 * Handle submissions csv download
+	 *
+	 * @since 6.6
+	 */
+	public function action_parse_request() {
+		if ( empty( $_GET['download_submissions'] ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		if ( empty( $_GET['post'] ) || 'ccf_form' !== get_post_type( $_GET['post']) ) {
+			return;
+		}
+
+		if ( empty( $_GET['download_submissions_nonce'] ) || ! wp_verify_nonce( $_GET['download_submissions_nonce'], 'ccf_download_submissions_nonce' ) ) {
+			return;
+		}
+
+		$post_id = (int) $_GET['post'];
+
+		$submissions = new WP_Query( array(
+			'post_type' => 'ccf_submission',
+			'posts_per_page' => apply_filters( 'ccf_max_submissions', 5000, $post_id ),
+			'no_found_rows' => true,
+			'cache_results' => false,
+			'fields' => 'ids',
+			'order' => 'DESC',
+			'orderby' => 'date',
+			'post_parent' => $post_id,
+		) );
+
+		// Todo: Unit tests
+
+		header( 'Content-Type: text/csv' );
+		header( 'Content-Disposition: attachment; filename=form-' . $post_id . '-submission-' . date( 'Y-m-d' ) . '.csv' );
+		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
+
+		$output = fopen( 'php://output', 'w' );
+		if ( $submissions->have_posts() ) {
+			$last_submission_id = $submissions->posts[0];
+
+			$fields = get_post_meta( $last_submission_id, 'ccf_submission_data_map', true );
+
+			if ( empty( $fields ) ) {
+
+				$slugs = array_keys( get_post_meta( $last_submission_id, 'ccf_submission_data', true ) );
+
+				$fields = array();
+
+				$attached_fields = get_post_meta( $post_id, 'ccf_attached_fields', true );
+				$attached_field_slugs = array();
+
+				foreach ( $attached_fields as $field_id ) {
+					$slug = get_post_meta( $field_id, 'ccf_field_slug', true );
+
+					if ( ! empty( $slug ) ) {
+						$attached_field_slugs[$slug] = $field_id;
+					}
+				}
+
+				foreach ( $slugs as $slug ) {
+					if ( ! empty( $attached_field_slugs[$slug] ) ) {
+						$fields[$slug] = array( 'id' => $attached_field_slugs[$slug], 'type' => get_post_meta( $attached_field_slugs[$slug], 'ccf_field_type', true ) );
+					}
+				}
+			}
+
+			$headers = array_merge( array( 'date', 'ip', ), array_keys( $fields ) );
+
+			fputcsv( $output, $headers );
+
+			foreach ( $submissions->posts as $submission_id ) {
+				$submission_data = get_post_meta( $submission_id, 'ccf_submission_data', true );
+				$submission_ip = get_post_meta( $submission_id, 'ccf_submission_ip', true );
+
+				$row = array(
+					get_the_time( 'Y-m-d H:i:s', $submission_id ),
+					sanitize_text_field( $submission_ip ),
+				);
+
+				foreach ( $fields as $slug => $field_array ) {
+					$type = $field_array['type'];
+
+					if ( ! empty( $submission_data[$slug] ) ) {
+						$field = $submission_data[$slug];
+
+						if ( 'date' === $type ) {
+
+							$row[] = stripslashes( CCF_Submission_CPT::factory()->get_pretty_field_date( $field ) );
+
+						} elseif ( 'name' === $type ) {
+
+							$row[] = stripslashes( CCF_Submission_CPT::factory()->get_pretty_field_name( $field ) );
+
+						} elseif ( 'file' === $type ) {
+
+							$row[] = $field['url'];
+
+						} elseif ( 'address' === $type ) {
+
+							$row[] = stripslashes( CCF_Submission_CPT::factory()->get_pretty_field_address( $field ) );
+
+						} elseif ( 'email' === $type ) {
+
+							if ( is_array( $field ) ) {
+								$row[] = stripslashes( $field['email'] );
+							} else {
+								$row[] = stripslashes( $field );
+							}
+
+						} elseif ( 'dropdown' === $type || 'radio' === $type || 'checkboxes' === $type ) {
+							if ( is_array( $field ) ) {
+								$i = 0;
+								$output = '';
+
+								foreach ( $field as $value ) {
+									if ( ! empty( $value ) ) {
+										if ( $i !== 0 ) {
+											$output .= ', ';
+										}
+
+										$output .= stripslashes( $value );
+
+										$i++;
+									}
+								}
+
+								if ( 0 === $i ) {
+									$row[] = '';
+								} else {
+									$row[] = $output;
+								}
+
+							} else {
+								$row[] = stripslashes( $field );
+							}
+
+						} else {
+							$row[] = stripslashes( $field );
+						}
+					} else {
+						$row[] = '';
+					}
+				}
+
+				fputcsv( $output, $row );
+			}
+
+			fclose( $output );
+		}
+
+		exit;
+	}
+
+	/**
+	 * Remove CCF post types from links query
+	 *
+	 * @param array $query
+	 * @since 6.5.1
+	 * @return array
+	 */
+	public function filter_wp_link_query_args( $query ) {
+		if ( is_array( $query ) && ! empty( $query['post_type'] ) ) {
+
+			$post_types = array();
+			$ccf_post_types = array( 'ccf_submission', 'ccf_form', 'ccf_field', 'ccf_choice' );
+
+			foreach ( $query['post_type'] as $post_type ) {
+				if ( ! in_array( $post_type, $ccf_post_types ) ) {
+					$post_types[] = $post_type;
+				}
+			}
+
+			$query['post_type'] = $post_types;
+		}
+
+		return $query;
 	}
 
 	/**
@@ -38,7 +233,7 @@ class CCF_Form_CPT {
 			return;
 		}
 
-		$submissions = get_children( array( 'post_parent' => $form_id, 'numberposts' => apply_filters( 'ccf_max_submissions', 5000, get_post( $form_id ) ) ) );
+		$submissions = get_children( array( 'post_parent' => $form_id, 'post_type' => 'ccf_submission', 'numberposts' => apply_filters( 'ccf_max_submissions', 5000, get_post( $form_id ) ) ) );
 		if ( ! empty( $submissions ) ) {
 			foreach ( $submissions as $submission ) {
 				wp_delete_post( $submission->ID, true );
@@ -63,6 +258,14 @@ class CCF_Form_CPT {
 
 	}
 
+	/**
+	 * Add extra html to screen options for submission columns
+	 *
+	 * @param array $options
+	 * @param array $screen
+	 * @since 6.0
+	 * @return string
+	 */
 	public function filter_screen_options( $options, $screen ) {
 		global $pagenow;
 		if ( 'post.php' !== $pagenow || empty( $_GET['post'] ) || 'ccf_form' !== get_post_type( $_GET['post'] ) ) {
@@ -167,18 +370,12 @@ class CCF_Form_CPT {
 	}
 
 	/**
-	 * Output submissions meta box
+	 * Output submissions meta box. This is a placeholder method since JS will do the work.
 	 *
 	 * @param object $post
 	 * @since 6.0
 	 */
-	public function meta_box_submissions( $post ) {
-
-		$page = ( empty( $_GET['submission_page'] ) || 1 == $_GET['submission_page'] ) ? 1 : (int) $_GET['submission_page'];
-
-
-		wp_reset_postdata();
-	}
+	public function meta_box_submissions( $post ) { }
 
 	/**
 	 * Output at a glance meta box. This contains stats about the form.
@@ -216,6 +413,8 @@ class CCF_Form_CPT {
 				<a class="submitdelete deletion" href="<?php echo get_delete_post_link($post->ID); ?>"><?php esc_html_e( 'Move to Trash', 'custom-contact-forms' ); ?></a>
 				<div class="clear"></div>
 			</div>
+
+			<a class="button export-button" href="<?php echo esc_url( admin_url( 'post.php?action=edit&post=' . (int) $post->ID . '&nonce=' . wp_create_nonce( 'ccf_form_export' ) ) . '&export=1' ); ?>"><?php esc_html_e( 'Export', 'custom-contact-forms' ); ?></a>
 		</div>
 		<?php
 	}
@@ -256,6 +455,11 @@ class CCF_Form_CPT {
 		<?php
 	}
 
+	/**
+	 * Setup JS and CSS
+	 *
+	 * @since 6.0
+	 */
 	public function action_admin_enqueue_scripts() {
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$admin_css_path = '/build/css/admin.css';
@@ -274,7 +478,7 @@ class CCF_Form_CPT {
 
 		global $pagenow;
 
-		if ( ( 'post.php' === $pagenow && 'ccf_form' === get_post_type() ) || ( 'post-new.php' === $pagenow && 'ccf_form' === $_GET['post_type'] ) ) {
+		if ( ( 'post.php' === $pagenow && 'ccf_form' === get_post_type() ) || ( 'post-new.php' === $pagenow && isset( $_GET['post_type'] ) && 'ccf_form' === $_GET['post_type'] ) ) {
 			wp_dequeue_script( 'autosave' );
 
 			add_thickbox();

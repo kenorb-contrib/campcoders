@@ -3,8 +3,8 @@
  * Copyright © 2015 All Rights Reserved. 
  *
  * @author Averta [www.averta.net]
- * @version 2.0
- * @date Jan 2015
+ * @version 2.0.8
+ * @date Mar 2015
  */
 
 
@@ -307,9 +307,11 @@ window.averta = {};
 		
 		removeEventListener : function(event , listener , ref){
 			if(this.listeners[event]){
-				for(var i = 0 , l = this.listeners[event].length; i < l ; ++i){
+
+				for(var i = 0; i < this.listeners[event].length ; ++i){
+					
 					if(listener === this.listeners[event][i].listener && ref === this.listeners[event][i].ref){	
-						this.listeners[event].splice(i,1);
+						this.listeners[event].splice(i--,1);
 					}
 				}
 				
@@ -1431,7 +1433,7 @@ window.averta = {};
 				self._deceleration = false;
 				self.__isout = false;
 				
-				if(this.__needsSnap && self.options.snapping && !self.options.paging){
+				if(self.__needsSnap && self.options.snapping && !self.options.paging){
 					self.value = self._checkLimits(self.end_loc + self.__extraMove);
 				}else{
 					self.value = Math.round(self.value);
@@ -1461,6 +1463,7 @@ MSSliderEvent.AUTOPLAY_CHANGE   	= 'ms_autoplaychange';
 MSSliderEvent.VIDEO_PLAY		   	= 'ms_videoPlay';
 MSSliderEvent.VIDEO_CLOSE		   	= 'ms_videoclose';
 MSSliderEvent.INIT					= 'ms_init';
+MSSliderEvent.HARD_UPDATE			= 'ms_hard_update';
 MSSliderEvent.RESIZE				= 'ms_resize';
 MSSliderEvent.RESERVED_SPACE_CHANGE = 'ms_rsc'; // internal use
 MSSliderEvent.DESTROY				= 'ms_destroy';
@@ -2204,14 +2207,20 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 			var that = this;
 			var last_time = new Date().getTime();
 			this.wheellistener = function(event){
+				
 				var e = window.event || event.orginalEvent || event;
 				e.preventDefault();
 				
 				var current_time = new Date().getTime();
 				if(current_time - last_time < 400) return;
 				last_time = current_time;
-				//var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+				
 				var delta = Math.abs(e.detail || e.wheelDelta);
+				
+				if ( $.browser.mozilla ) {
+					delta *= 100;
+				}
+
 				var scrollThreshold = 15; 
 				
 				// --- Scrolling up ---
@@ -2227,8 +2236,6 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 					}
 				}
 
-				//if(delta < 0)		that.next();
-				//else if(delta > 0)	that.previous();
 				return false;
 			};
 			
@@ -2332,6 +2339,11 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 		if(this.slider.init_safemode && hard)
 			this.slider.init_safemode = false;
 		this.__resize(hard);
+
+		if ( hard ) { 
+			this.dispatchEvent(new MSSliderEvent(MSSliderEvent.HARD_UPDATE));
+		}
+
 	};
 		
 	p.locate = function(){
@@ -2407,10 +2419,12 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 			parallaxMode 		: 'mouse',	  // @since 1.6.0, Specifies mode of parallax effect accepts: "mouse", "mouse:x-only", "mouse:y-only" and "swipe"
 			rtl 				: false,	  // @since 1.8.0, Whether Right-to-left direction slider.
 			deepLink			: null,       // @since 2.1.0, null value disables slider deep-linking any string values identifies the slider in page's url like /#msslider-1
-			deepLinkType 		: 'path' 	  // @since 2.1.0, type of hash value in page's url possible values, path and query (  #gallery/1 || #gallery=4 )
+			deepLinkType 		: 'path', 	  // @since 2.1.0, type of hash value in page's url possible values, path and query (  #gallery/1 || #gallery=4 )
+			disablePlugins      : []		  // @since 2.9.6, list of disabled Master Slider plugin names for this instance.
 		};
 		
-		this.slides = [];		
+		this.slides = [];
+		this.activePlugins = [];	
 		this.$element = null;
 
 		// used by new layout method. to force fullwidth or fullscreen
@@ -2422,6 +2436,9 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 		this.rightSpace = 0;
 		this.bottomSpace = 0;
 
+		// hold on stack
+		this._holdOn = 0;
+
 		var that = this;
 		this.resize_listener = function(){that._resize();};
 		$(window).bind('resize', this.resize_listener);
@@ -2429,9 +2446,18 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 	};
 	
 	MasterSlider.author  		= 'Averta Ltd. (www.averta.net)';
-	MasterSlider.version 		= '2.0';
-	MasterSlider.releaseDate 	= 'Jan 2015';
+	MasterSlider.version 		= '2.0.8';
+	MasterSlider.releaseDate 	= 'Mar 2015';
 	
+	// Master Slider plugins.
+	MasterSlider._plugins = []
+	var MS = MasterSlider;
+	MS.registerPlugin = function ( plugin ) {
+		if ( MS._plugins.indexOf(plugin) === -1 ) {
+			MS._plugins.push(plugin);
+		}
+	};
+
 	var p = MasterSlider.prototype;
 	
 	/*-------------- METHODS --------------*/
@@ -2445,7 +2471,7 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 		var that = this,
 			new_slide,
 			ind = 0;
-		
+
 		this.$element.children('.ms-slide').each(function(index) {
 			
 			var $slide_ele = $(this);
@@ -2555,7 +2581,7 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 		
 		var lo = this.options.layout;
 
-		
+	
 		if( lo !== 'boxed' && lo !== 'partialview' ){
 			this.options.fullwidth = true;  // enable slider fullscreen for fullwidth, fillwidth, autofill and fullscreen layouts.
 		} 
@@ -2590,13 +2616,15 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 
 	/**
 	 * initialize the slider, called by document ready
-	 * <code>preventInit</code> property prevents auto initialize slider after document ready it used by plugins of slider like Flickr
+	 * <code>holdOn</code> property prevents auto initialize slider after document ready it used by plugins of slider like Flickr
 	 * @since 1.0
 	 * @protected
 	 */
 	p._init = function(){
-		
-		if(this.preventInit) return;
+	
+		if ( this._holdOn > 0 ) {
+			return;
+		}
 		
 		this.initialized = true;
 
@@ -2749,7 +2777,25 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 		
 		return this;
 	};
-	
+
+	/**
+	 * Hold on slider from initialization
+	 * @since 2.9.6
+	 * @public
+	 */
+	p.holdOn = function () {
+		this._holdOn ++;
+	};
+
+	/**
+	 * Let the slider to initialize 
+	 * @since 2.9.6
+	 */
+	p.release = function () { 
+		this._holdOn --;
+		this._init();
+	};
+
 	/**
 	 * setup slider
 	 * @param  {String|jQuery object} id
@@ -2822,6 +2868,15 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 		this.slideController = new MSSlideController(this);
 		this.api = this.slideController;
 
+		// setup plugins
+		for ( var i = 0, l = MS._plugins.length; i !== l; i++ ) {
+			var plugin = MS._plugins[i];
+
+			if ( this.options.disablePlugins.indexOf(plugin.name) === -1 ) {
+				this.activePlugins.push(new plugin(this));
+			}
+		}
+
 		$(document).ready(function(){that._init();});
 
 		return this;
@@ -2835,8 +2890,13 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 	 */
 	p.destroy = function(insertMarkup){
 		
+		// destroy active plugins
+		for ( var i = 0, l = this.activePlugins.length; i !== l; i++ ) {
+			this.activePlugins[i].destroy();
+		}
+
 		if(this.controls){
-			for(var i = 0 , l = this.controls.length; i!==l ; i++)
+			for( i = 0, l = this.controls.length; i !== l; i++ )
 				this.controls[i].destroy();
 		}
 		
@@ -2844,10 +2904,11 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 
 		if(this.$loading) this.$loading.remove();
 
-		if(insertMarkup) 
+		if ( insertMarkup ) {
 			this.$element.html(this.setupMarkup).css('visibility' , 'hidden');
-		else    		 
+		} else {	 
 			this.$element.remove();
+		}
 
 		var lo = this.options.layout;
 		if( lo === 'fullscreen' ||  lo === 'fullwidth' ){
@@ -2860,6 +2921,9 @@ MSSliderEvent.DESTROY				= 'ms_destroy';
 		this.slideController = null;
 		this.api = null;
 		this.resize_listener = null;
+
+
+		this.activePlugins = null;
 	};
 		
 })(jQuery);
@@ -2982,13 +3046,13 @@ window.MSViewEvents = function (type, data){
 	this.data = data;
 };
 
-MSViewEvents.SWIPE_START      = 'swipeStart';
-MSViewEvents.SWIPE_END        = 'swipeEnd';
-MSViewEvents.SWIPE_MOVE		 = 'swipeMove';
-MSViewEvents.SWIPE_CANCEL   	 = 'swipeCancel';
-MSViewEvents.SCROLL 			 = 'scoll';
-MSViewEvents.CHANGE_START     = 'slideChangeStart';
-MSViewEvents.CHANGE_END	     = 'slideChangeEnd';
+MSViewEvents.SWIPE_START      	= 'swipeStart';
+MSViewEvents.SWIPE_END       	= 'swipeEnd';
+MSViewEvents.SWIPE_MOVE			= 'swipeMove';
+MSViewEvents.SWIPE_CANCEL   	= 'swipeCancel';
+MSViewEvents.SCROLL 			= 'scroll';
+MSViewEvents.CHANGE_START   	= 'slideChangeStart';
+MSViewEvents.CHANGE_END	     	= 'slideChangeEnd';
 
 /* ================== bin-debug/js/lite/views/BasicView.js =================== */
 ;(function($){
@@ -3779,9 +3843,10 @@ MSViewEvents.CHANGE_END	     = 'slideChangeEnd';
 			this.$element.css('display' , 'none');
 		} else {
 			clearTimeout(this.hideTo);
-			this.hideTo = setTimeout(function($element){
+			var $element = this.$element;
+			this.hideTo = setTimeout(function(){
 				CTween.fadeOut($element , 400 , false);
-			}, 20 , this.$element);
+			}, 20);
 		}
 
 		this.$element.addClass('ms-ctrl-hide');
@@ -3999,7 +4064,7 @@ MSViewEvents.CHANGE_END	     = 'slideChangeEnd';
 	};
 
 	p.slideAction = function(slide){
-		var thumb_ele = $(slide.$element.find('.ms-thumb'));
+		var thumb_ele = slide.$element.find('.ms-thumb');
 		var that = this;
 		var thumb_frame = $('<div></div>')
 					.addClass('ms-thumb-frame')
@@ -4073,6 +4138,7 @@ MSViewEvents.CHANGE_END	     = 'slideChangeEnd';
 		}
 		
 		this.slider.api.addEventListener(MSSliderEvent.CHANGE_START , this.update , this);
+		this.slider.api.addEventListener(MSSliderEvent.HARD_UPDATE, this.realignThumbs, this);
 		this.cindex =  this.slider.api.index();
 		this.select(this.thumbs[this.cindex]);
 		
@@ -4154,6 +4220,12 @@ MSViewEvents.CHANGE_END	     = 'slideChangeEnd';
 		this.select(this.thumbs[this.cindex]);
 	
 		if(!this.dTouch)this.updateThumbscroll();
+	};
+
+	p.realignThumbs = function () {
+		this.$element.find('.ms-thumb').each( function (index, thumb) {
+			thumb.aligner.align();
+		} );
 	};
 
 	p.updateThumbscroll = function(){
@@ -4912,6 +4984,69 @@ MSViewEvents.CHANGE_END	     = 'slideChangeEnd';
 	
 	MSSlideController.registerControl('slideinfo' , MSSlideInfo);
 })(jQuery);
+
+/* ================== bin-debug/js/pro/plugins/MSStartOnAppear.js =================== */
+/**
+ * Start on appear plugin for Master Slider.
+ * 
+ * @description This plugin prevents slider automatically initialization and inits slider when it appears inside of the browser window.
+ * @version  1.0.0
+ * @author Averta
+ * @package MasterSlider jQuery
+ */
+
+;(function($, document, window){
+
+	var $window = $(window),
+		$doc = $(document);
+
+	// check if master slider is available
+	if ( !window.MasterSlider ) {
+		return;
+	}
+
+	var StartOnAppear = function ( slider ) {
+		this.slider = slider;
+		this.$slider = slider.$element;
+		
+		if ( this.slider.options.startOnAppear ) {
+			// hold on slider
+			slider.holdOn();
+			$doc.ready($.proxy(this.init, this));
+		}
+	};
+
+	StartOnAppear.name = 'MSStartOnAppear';
+	var p = StartOnAppear.prototype;
+
+	/**
+	 * initiate the plugin
+	 */
+	p.init = function (){
+		var api = this.slider.api;
+		$window.on('scroll', $.proxy(this._onScroll, this)).trigger('scroll');
+	};
+
+	p._onScroll = function () {
+		// check slider position
+		var vpBottom = $window.scrollTop() + $window.height(),
+			sliderTop = this.$slider.offset().top;
+
+		if ( sliderTop <= vpBottom ) {
+			this.slider.release();
+			$window.off('scroll', this._onScroll);
+		}
+	};
+
+	/**
+	 * destroy the plugin
+	 */
+	p.destroy = function(){};
+
+	// install plugin to master slider
+	MasterSlider.registerPlugin( StartOnAppear );
+
+})(jQuery, document, window);
 /**
  * Addon file, it will be appended to master slider front-end main js file.
  */

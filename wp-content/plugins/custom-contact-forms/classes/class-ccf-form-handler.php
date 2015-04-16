@@ -620,8 +620,8 @@ class CCF_Form_Handler {
 
 			$slug = get_post_meta( $field_id, 'ccf_field_slug', true );
 
-			// We will use this later when emailing a submission
-			$field_slug_to_id[$slug] = $field_id;
+			// We save this to reference later
+			$field_slug_to_id[$slug] = array( 'id' => $field_id, 'type' => sanitize_text_field( $type ) );
 
 			$custom_value_mapping = array( 'recaptcha' => 'g-recaptcha-response' );
 
@@ -659,6 +659,12 @@ class CCF_Form_Handler {
 
 			if ( ! is_wp_error( $submission_id ) ) {
 				update_post_meta( $submission_id, 'ccf_submission_data', $submission );
+
+				/**
+				 * @since 6.6
+				 */
+				update_post_meta( $submission_id, 'ccf_submission_data_map', $field_slug_to_id );
+
 				update_post_meta( $submission_id, 'ccf_submission_ip', sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) );
 
 				foreach ( $file_ids as $file_id ) {
@@ -690,7 +696,7 @@ class CCF_Form_Handler {
 					ob_start();
 
 					foreach ( $submission as $slug => $field ) {
-						$field_id = $field_slug_to_id[$slug];
+						$field_id = $field_slug_to_id[$slug]['id'];
 						$label = get_post_meta( $field_id, 'ccf_field_label', true );
 						$type = get_post_meta( $field_id, 'ccf_field_type', true );
 
@@ -701,7 +707,7 @@ class CCF_Form_Handler {
 
 						<div>
 							<?php if ( ! empty( $label ) ) : ?>
-								<b><?php echo esc_html( $label ); ?> (<?php echo esc_html( $slug ); ?>):</b>
+								<b><?php echo esc_html( $label ); ?> <?php if ( apply_filters( 'ccf_show_slug_in_submission_email', false, $submission_id, $form_id ) ) : ?>(<?php echo esc_html( $slug ); ?>)<?php endif; ?>:</b>
 							<?php else : ?>
 								<b><?php echo esc_html( $slug ); ?>:</b>
 							<?php endif; ?>
@@ -775,12 +781,14 @@ class CCF_Form_Handler {
 					<?php
 					}
 
-					?>
-					<div>
-						<?php esc_html_e( 'Form submitter IP', 'custom-contact-forms' ); ?>:
-						<?php echo esc_html( $_SERVER['REMOTE_ADDR'] ); ?>
-					</div>
-					<?php
+					if ( apply_filters( 'ccf_show_ip_in_submission_email', true, $submission_id, $form_id ) ) {
+						?>
+						<div>
+							<?php esc_html_e( 'Form submitter IP', 'custom-contact-forms' ); ?>:
+							<?php echo esc_html( $_SERVER['REMOTE_ADDR'] ); ?>
+						</div>
+						<?php
+					}
 
 					$message .= ob_get_clean();
 
@@ -810,7 +818,11 @@ class CCF_Form_Handler {
 					}
 
 					foreach ( $email_addresses as $email ) {
-						$subject = sprintf( __( '%s: Form Submission to "%s"', 'custom-contact-forms' ), wp_specialchars_decode( get_bloginfo( 'name' ) ),  wp_specialchars_decode( $form->post_title ) );
+						$subject = sprintf( __( '%s: Form Submission', 'custom-contact-forms' ), wp_specialchars_decode( get_bloginfo( 'name' ) ) );
+						if ( ! empty( $form->post_title ) ) {
+							$subject .= sprintf( __( ' to "%s"', 'custom-contact-forms' ), wp_specialchars_decode( $form->post_title ) );
+						}
+
 						$subject = apply_filters( 'ccf_email_subject', $subject, $form_id, $email, $form_page );
 						wp_mail( $email, $subject, apply_filters( 'ccf_email_content', $message, $form_id, $email, $form_page ), apply_filters( 'ccf_email_headers', $headers, $form_id, $email, $form_page ) );
 					}
