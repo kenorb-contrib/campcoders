@@ -1,5 +1,32 @@
 // JavaScript Document
 jQuery(window).ready(function() {
+	if(primarytext == undefined) {
+		var primarytext = "#888888";
+	}
+	if(sechovertext == undefined) {
+		var sechovertext = "#FFFFFF";	
+	}
+	if(menutext == undefined) {
+		var menutext = "#FFFFFF";
+	}
+	if(footwidget == undefined) {
+		var footwidget ="#999999";
+	}
+	if(footwidgethover == undefined) {
+		var footwidgethover ="#ffffff";			
+	}
+	if(primarycolor == undefined) {
+		var primarycolor = "#2dcb73";
+	}
+	if(primardefault == undefined) {
+		var primardefault = "#ffffff";
+	}
+	if(sechover == undefined) {
+		var sechover = "#2dcb73";
+	}
+	if(socialbuttons == undefined) {
+		var socialbuttons ="#cccccc";
+	}
 
 	//Text Animation Color
 	jQuery('.single_metainfo .catag_list a, .auth_meta, .meta_comm a, .post_meta a').hover(function(){
@@ -20,6 +47,9 @@ jQuery(window).ready(function() {
 	jQuery(this).find('a, i').animate({ "color":primarytext }, 200);	
 	});
 	//Block Animation
+	if(sechovertext == undefined){
+		var sechovertext = "#FFFFFF"
+	}
 	if (jQuery(window).width() > 480) {
 	jQuery('.midrow_block').hover(function(){
 	jQuery(this).stop().animate({ "color":sechovertext, "backgroundColor":sechover, "paddingTop":"0px" }, 200);
